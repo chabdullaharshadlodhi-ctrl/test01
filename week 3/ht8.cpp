@@ -1,0 +1,31 @@
+#include<iostream>
+using namespace std;
+main() {
+float N;
+float M;
+int total_kgs_of_veg;
+int total_kgs_of_fruits;
+float total_earning_in_rupees;
+
+cout<<"Enter vegetable price per kilogram(in coins): ";
+cin>>N;
+
+cout<<"Emter fruit price per killograme(in coins): ";
+cin>>M;
+
+cout<<"Enter total kilograms of vegetable: ";
+cin>>total_kgs_of_veg;
+
+cout<<"Enter total killogrmas of fruits: ";
+cin>>total_kgs_of_fruits;
+ 
+total_earning_in_rupees=(N*total_kgs_of_veg+M*total_kgs_of_fruits)/1.94;
+
+cout<<"The earning of the harvest in rupees: "<<total_earning_in_rupees<<endl;
+
+
+}
+
+
+
+
