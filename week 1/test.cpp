@@ -1,6 +1,8 @@
 #include<iostream>
 using namespace std;
-main(){
-cout<<"Hello world";'\n\
-cout<<"this is one of my programmes";'\n\
-}
+int main() {
+    float f=5;
+    int a=2;
+    float m=f/a;
+    cout<<m;
+    return 0;   }
