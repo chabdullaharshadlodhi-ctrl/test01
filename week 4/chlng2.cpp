@@ -5,7 +5,7 @@ int main(){
     cout<<"Enter the three numbers: ";
     cin>>n1>>n2>>n3;
     if (n1 > n2 && n1 > n3){
-        cout<<"The largest number is: "<<n1;
+        cout<<"The largest number is: "<<15n1;
     }
     else if (n2 > n1 && n2 > n3){
         cout<<"The largest number is: "<<n2;
