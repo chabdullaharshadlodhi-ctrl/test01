@@ -36,8 +36,8 @@ int main() {
     cout<<endl;
     cout<<"Another pattern: "<<endl;
 
-        for (int rows = 10; rows >=1 ; rows--) {
-                for( int spaces=1; spaces< rows; spaces++){
+        for (int rows = 1; rows <=10 ; rows++) {
+                for( int spaces=10; spaces> rows; spaces--){
                 cout << "  "; 
             }
             for (int cols = 10; cols >rows; cols--) {

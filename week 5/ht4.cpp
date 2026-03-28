@@ -7,7 +7,7 @@ for(int i=1; i<=5; i++){
     
 
 }
-    cout<<"The sum of numbers from 1 to 5 is: "<<sum<<endl;
+    coutsssss<<"The sum of numbers from 1 to 5 is: "<<sum<<endl;
     return 0;
 }
 
