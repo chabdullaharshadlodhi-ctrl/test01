@@ -1,0 +1,299 @@
+#include<iostream>
+#include<string>
+#include<cstdlib> // we use this for system cls command
+#include<conio.h> // we use this for getch() command
+using namespace std;
+int main(){
+    const int maxPatients=100;
+    //using the concept of parallel arrays like five different books for different data of the same person
+    int ids[maxPatients]={1,2,3,4,5,6,7,8,9,10}; //it means we already have 10 patients
+    string names[maxPatients]={"Ramzan", "Husnain", "Muneeb", "Junaid", "Sufyan", "Ali", "Ahmed", "Omar", "Yousaf", "Zainab"};
+    int ages[maxPatients]={18,19,20,21,22,23,24,25,26,27};
+    string diseases[maxPatients]={"Flu", "Cold", "Fever", "Headache", "Stomachache", "Cough", "Body Pain", "Dizziness", "Nausea", "Fatigue"};
+
+    //for the history of 5 patients
+    const int histSize=10;
+    int histIds[histSize]={1,2,3,4,5};
+    string histNames[histSize]={"Ramzan", "Husnain", "Muneeb", "Junaid", "Sufyan"};
+    int histAges[histSize]={18,19,20,21,22};
+    string histDiseases[histSize]={"Flu", "Cold", "Fever", "Headache", "Stomachache"};
+
+    int patientCount=0; // when we add patient we'll increase this by 1
+    while(true){
+        cout<<endl;
+        system("cls");
+
+        cout<<endl;
+        cout<<"|HOSPITAL MANAGEMENT SYSTEM|"<<endl;
+        cout<<endl;
+
+        cout<<"1 admin "<<endl;
+        cout<<"2 receptionist "<<endl;  
+        cout<<"3 exit "<<endl;
+        cout<<"choose option : ";
+        int useroption;
+        cin>>useroption;
+    
+
+    //now we are going to write the code for admin panel 
+    if(useroption == 1){
+        int countattempts = 0;
+        system("cls");
+        //now we are going to write the code for the login system of admin
+        for(int i=0;i<3;i++){
+            cout<<"Welcome to admin portal: login attempt "<<i+1<<endl;
+            cout<<"enter username : ";
+            string user_name;
+            cin>>user_name;
+            cout<<"enter password : ";
+            string password;
+            cin>>password;
+        
+
+            if(user_name == "admin" && password == "123"){
+                cout<<"you are successfully logged in!"<<endl;
+                cout<<"press any key to continue..."; 
+                getch(); // so that it wait for us to press any key before going to next  part
+            
+            } 
+            while(true)
+            {
+                system("cls");
+                cout << "1 Show all patients information" << endl;
+                cout << "2 Search patient by name" << endl;
+                cout << "3 Update patient information" << endl;
+                cout << "4 Delete patient " << endl;
+                cout << "5 Add new patient " << endl;
+                cout << "6 View patient history " << endl;
+                cout << "7 Logout " << endl;
+
+                int adminOption;
+                cout <<"Please select option : ";
+                cin >> adminOption;
+
+                if(adminOption == 1)
+                {
+                    // we are going to show patient data in tabular form
+                    cout << "ID\tName\tAge\tDisease" << endl;
+                    for(int i=0; i<patientCount; i++)
+                    {
+                        if(names[i] != "") // using this if function to avoid showing deleted records
+                        {
+                        cout << ids[i] << "\t" << names[i] << "\t" << ages[i] << "\t" << diseases[i] << endl;
+                    }
+                }
+                cout <<"press any key to continue..." << endl;
+                getch();
+            }
+                else if(adminOption == 2)
+                {
+                    //we are going to write code for searching patient by name
+                    cout << "Enter the name of the patient to search: ";
+                    string searchName;
+                    cin >> searchName;
+                    bool found = false;
+                    int foundIndex = -1; // cant put it 0 because if the record is found at index 0 then it will be a problem(as we put sum=0 and multiply =1)
+                    for(int i=0; i<patientCount; i++)
+                    {
+                        if(names[i] == searchName)
+                        {
+                            found = true;
+                            foundIndex = i;
+                        }
+                    }
+                    if(found == false)
+                    {
+                        cout << "patient not found" <<endl;
+                    }
+                    else
+                    {
+                        cout << "ID\tName\tAge\tDisease" << endl;
+                        cout << ids[foundIndex] << "\t" << names[foundIndex] << "\t" << ages[foundIndex] << "\t" << diseases[foundIndex] << endl;
+                    }
+                    cout << "Press any key to continue..." << endl;
+                    getch();
+
+                }
+                else if(adminOption == 3)
+                {
+                    // we are going to write code for updating patient record
+                    cout << "Enter the name of the patient to update: ";
+                    string updateName;
+                    cin >> updateName;
+                    bool found = false; // we use this to check if the record is found or not kiu ke agr name hoga to hi update kr skien ge 
+                    int foundIndex = -1;
+                    for(int i=0; i<patientCount; i++)
+                    {
+                        if(names[i] == updateName)
+                        {
+                            found = true;
+                            foundIndex = i;
+                        }
+                    }
+                    if(found == true)
+                    {
+                        cout<<"|______old record______|"<<endl;
+                        cout<< "ID\tName\tAge\tDisease" << endl;
+                        cout << ids[foundIndex] << "\t" << names[foundIndex] << "\t" << ages[foundIndex] << "\t" << diseases[foundIndex] << endl;
+
+                            cout << "Enter new record : " << endl;
+                            cout << "Enter your id : ";
+                            int id;
+                            cin >> id;
+                            cout << "Enter your name : ";
+                            string name;
+                            cin >> name;
+                            cout << "Enter your age : ";
+                            int age;
+                            cin >> age;
+                            cout << "Enter your disease : ";
+                            string disease;
+                            cin >> disease;
+                            ids[foundIndex] = id;
+                            names[foundIndex] = name;
+                            ages[foundIndex] = age;
+                            diseases[foundIndex] = disease;
+                            cout<< "your information have been saved successfully!" << endl;
+                            cout << "Press any key to continue..." << endl;
+                            getch();
+
+                    }
+                    else
+                    {
+                        cout << "patient not found" << endl;
+                        cout << "Press any key to continue..." << endl;
+                        getch();
+                    }
+                }
+                else if(adminOption ==4){ //code to delete patient record
+                    cout << "Enter the name of the patient to delete: ";
+                    string deleteName;
+                    cin >> deleteName;
+                    bool found = false;
+                    int foundIndex = -1;
+                     for (int i = 0; i < patientCount; i++) {
+                        if (names[i] == deleteName) {
+                            for(int j = i; j<patientCount - 1; j++) {
+                                ids[j] = ids[j + 1];
+                                names[j] = names[j + 1];
+                                ages[j] = ages[j + 1];
+                                diseases[j] = diseases[j + 1];
+                            }
+                            // After shifting, decrease the patient count
+                            patientCount--; 
+                            cout << "Record deleted successfully!" << endl;
+                            found = true;
+                            break;
+                        }
+                        if(found == false)
+                        {
+                            cout << "patient not found" << endl;
+                            cout << "Press any key to continue..." << endl;
+                            getch();
+                        }
+                        /* another way to delete record without shifting but it will create empty record in the list of patients and we can avoid showing that record by using if function in the show all patients option
+                        else if(adminOption == 4)
+                         cout << "Enter the name of the patient to delete: ";
+                    string deleteName;
+                    cin >> deleteName;
+                    bool found = false;
+                    int foundIndex = -1;
+                     for (int i = 0; i < patientCount; i++) {
+                         if (names[i] == deleteName){
+                            names[i] = ""; // we are not actually deleting the record but we are making the name empty so that it will not show in the list of patients
+                            ages[i] = 0; // we are also making age 0 because it will not show in the list of patients
+                            diseases[i] = ""; // we are also making disease empty because it will not show in the list of patients
+                            cout << "Record deleted successfully!" << endl;
+                            found = true;
+                         }
+                            */
+                     }
+
+                     }
+                else if(adminOption == 5){
+                    // code for new patient
+                    if(patientCount < maxPatients){
+                        int id;
+                         string name;
+                         int age;
+                         string disease;
+                        cout << "Enter new patient record: " << endl;
+                        cout << "Enter your id : ";
+                        
+                        cin >> id;
+                        cout << "Enter your name : ";
+                       
+                        cin >> name;
+                        cout << "Enter your age : ";
+                        
+                        cin >> age;
+                        cout << "Enter your disease : ";
+                        
+                        cin >> disease;
+
+                        ids[patientCount] = id;
+                        names[patientCount] = name;
+                        ages[patientCount] = age;
+                        diseases[patientCount] = disease;
+
+                        // now we have to add this in history
+                         for (int i = histSize - 1; i > 0; i--) {
+                            histIds[i] = histIds[i - 1];
+                            histNames[i] = histNames[i - 1];
+                            histAges[i] = histAges[i - 1];
+                            histDiseases[i] = histDiseases[i - 1];
+                        }
+                        // Insert new record at the beginning of history
+                        histIds[0] = ids[patientCount];
+                        histNames[0] = names[patientCount];
+                        histAges[0] = ages[patientCount];
+                        histDiseases[0] = diseases[patientCount];
+
+                         if (histSize < maxPatients) patientCount++; // increase patient count only if we haven't reached max capacity
+                        
+                        cout << "Patient added successfully!" << endl;
+                    } else {
+                        cout << "System is full! Cannot add more patients." << endl;
+                    }
+                    cout << "Press any key to continue";
+                    getch();
+
+
+                } else if(adminOption == 6){
+                    // code for viewing patient history
+                    cout << "ID\tName\tAge\tDisease" << endl;
+                    for(int i=0; i<histSize; i++){
+                        if(histNames[i] != ""){ // so that is doesnt show empty records
+                            cout << histIds[i] << "\t" << histNames[i] << "\t" << histAges[i] << "\t" << histDiseases[i] << endl;
+                        }
+                     }
+                     cout << "Press any key to continue..." << endl;
+                     getch();
+                }
+                else if(adminOption == 7){
+                    // code for logout
+                    cout << "You have been logged out successfully!" << endl;
+                    cout << "Press any key to continue..." << endl;
+                    getch();
+                    break; // this will break the admin menu and return to main menu
+                
+                }
+            
+            
+            
+            
+            
+          
+
+          
+
+
+    }
+    
+}
+}
+
+}
+return 0;
+    }
+    
