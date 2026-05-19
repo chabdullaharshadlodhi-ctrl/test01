@@ -2,22 +2,91 @@
 #include<string>
 #include<cstdlib> // we use this for system cls command
 #include<conio.h> // we use this for getch() command
+#include<fstream> // we use this for file handling (ofstream and ifstream)
 using namespace std;
 
 const int maxPatients=100;
-int patientCount=10; // this will keep track of how many patients we have in the system
-const int histSize=10; // this will keep track of how many patients history we want to keep in the system
-
+int patientCount=0; // for the track of patients in the system 
+const int histSize=10; // like how many patients history we want in system 
+void save_to_file(string names[], int ids[], int ages[], string diseases[],
+                  int histIds[], string histNames[], int histAges[], string histDiseases[])
+                  {
+    fstream file;
+    file.open("patients1.txt", ios::out); // open file in write mode, if file doesnt exist it will create new file, if it already exists then it will overwrite the existing data
+    if (file.is_open())     
+    {        file << patientCount << endl; // we need to save patient count as well so that when we load data we know how many records to read
+        for (int i = 0; i < patientCount; i++)
+        {
+            if(names[i] != ""){ // so that it doesnt show deleted records
+            file << ids[i]      << endl; 
+            file << names[i]    << endl; 
+            file << ages[i]     << endl; 
+            file << diseases[i] << endl; 
+            }
+        }
+        for(int i=0; i<histSize; i++)
+        {
+            if(histNames[i]!=""){
+                file << histIds[i]      << endl;
+                file << histNames[i]    << endl;
+                file << histAges[i]     << endl;
+                file << histDiseases[i] << endl;
+            }
+        }
+        file.close();
+        cout << "Data saved successfully to patients.txt!" << endl;
+    }
+    else
+    {
+        cout << "Error: Could not save data to file!" << endl;
+    }
+}
+void load_from_file(string names[], int ids[], int ages[], string diseases[],
+                    int histIds[], string histNames[], int histAges[], string histDiseases[])
+{
+    fstream file;
+    file.open("patients1.txt", ios::in);
+    if (file.is_open())
+    {
+       file >> patientCount;
+        for (int i = 0; i < patientCount; i++)
+        {
+            file >> ids[i];       
+            file >> names[i];     
+            file >> ages[i];     
+            file >> diseases[i];  
+        }
+        for (int i = 0; i < histSize; i++)
+        {
+            file >> histIds[i];
+            file >> histNames[i];
+            file >> histAges[i];
+            file >> histDiseases[i];
+         }
+        file.close();
+        cout << "Previous data loaded successfully!" << endl;
+}
+else{
+        cout << "No saved data found. System starting fresh. Use option 5 to add patients." << endl;
+        
+    }
+}
+void display_records(int ids[], string names[], int ages[], string diseases[], int count, string title)
+{ // this is a generic function to display records, we will call it for both show all patients and view history, we just pass different arrays and count and title from the caller
+    cout << title << endl; // print whatever heading the caller passed in
+    cout << "ID\tName\tAge\tDisease" << endl;
+    for(int i=0; i<count; i++) // loop up to count - decided by whoever calls this function
+    {
+        if(names[i] != "") // skip empty or deleted slots
+        {
+            cout << ids[i] << "\t" << names[i] <<"\t" << ages[i] << "\t" << diseases[i] << endl;
+        }
+    }
+}
 void show_all_patients(string names[], int ids[], int ages[], string diseases[]){
-                    // we are going to show patient data in tabular form
-                    cout << "ID\tName\tAge\tDisease" << endl;
-                    for(int i=0; i<patientCount; i++)
-                    {
-                        if(names[i] != "") // using this if function to avoid showing deleted records
-                        {
-                        cout << ids[i] << "\t" << names[i] << "\t" << ages[i] << "\t" << diseases[i] << endl;
-                    }
-                }
+                    display_records(ids, names, ages, diseases, patientCount, "All Patients");
+                    cout << "Press any key to continue..." << endl;
+                    getch();
 }
 void search_patient_by_name(string names[], int ids[], int ages[], string diseases[]){
                     cout << "Enter the name of the patient to search: ";
@@ -65,7 +134,7 @@ void update_patient_information(string names[], int ids[], int ages[], string di
                         cout<< "ID\tName\tAge\tDisease" << endl;
                         cout << ids[foundIndex] << "\t" << names[foundIndex] << "\t" << ages[foundIndex] << "\t" << diseases[foundIndex] << endl;
 
-                            cout << "Enter new record : " << endl;
+                            cout << "---Enter new record---" << endl;
                             cout << "Enter your id : ";
                             int id;
                             cin >> id;
@@ -100,14 +169,14 @@ void delete_patient(string names[], int ids[], int ages[], string diseases[]){
                     bool found = false;
                     for (int i = 0; i < patientCount; i++) {
                         if (names[i] == deleteName) {
-                            for(int j = i; j<patientCount - 1; j++) {
+                            for(int j = i; j<patientCount - 1; j++) {//inner loop goes upto pc-1 because we are accessing j+1 in the loop and if j goes upto pc then it will be out of bound error
                                 ids[j] = ids[j + 1];
                                 names[j] = names[j + 1];
                                 ages[j] = ages[j + 1];
                                 diseases[j] = diseases[j + 1];
                             }
                             // After shifting, decrease the patient count
-                            patientCount--;
+                            patientCount--;//reduce pc by 1 because we have deleted one record
                             cout << "Record deleted successfully!" << endl;
                             found = true;
                             break;
@@ -142,7 +211,7 @@ void add_new_patient(string names[], int ids[], int ages[], string diseases[], i
                             cout << "Enter your disease : ";                       
                             cin >> disease;
                             
-                            // Add new patient record to the main arrays whereever the next index is available
+                            // Because patientCount always equals the number of existing patients, which is also always the index of the next empty slot. For example — 5 patients means slots 0,1,2,3,4 are filled. Next empty = slot 5 = patientCount
                             ids[patientCount] = id;
                             names[patientCount] = name;
                             ages[patientCount] = age;
@@ -173,14 +242,9 @@ void add_new_patient(string names[], int ids[], int ages[], string diseases[], i
 }
 
 void view_patient_history(int histIds[], string histNames[], int histAges[], string histDiseases[]){
-                    cout << "ID\tName\tAge\tDisease" << endl;
-                    for(int i=0; i<histSize; i++){
-                        if(histNames[i] != ""){ // so that is doesnt show empty records
-                            cout << histIds[i] << "\t" << histNames[i] << "\t" << histAges[i] << "\t" << histDiseases[i] << endl;
-                        }
-                     }
-                     cout << "Press any key to continue..." << endl;
-                     getch();
+                  display_records(histIds, histNames, histAges, histDiseases, histSize, "Patient History");
+    cout << "Press any key to continue..." << endl;
+    getch();
 }
 void logout(){
     cout << "You have been logged out successfully!" << endl;
@@ -223,7 +287,7 @@ void patient_self_update(string names[], int ids[], int ages[]) {
         if (ids[i] == searchId) {
             found = true;
             cout << "Record Found for: " << names[i] << endl;           
-            cout << "\nEnter updated Name: ";
+            cout << "Enter updated Name: ";
             cin >> names[i];            
             cout << "Enter updated Age: ";
             cin >> ages[i];
@@ -240,17 +304,23 @@ void patient_self_update(string names[], int ids[], int ages[]) {
 
 int main(){
     //using the concept of parallel arrays like five different books for different data of the same person
-    int ids[maxPatients]={1,2,3,4,5,6,7,8,9,10}; //it means we already have 10 patients
-    string names[maxPatients]={"Ramzan", "Husnain", "Muneeb", "Junaid", "Sufyan", "Ali", "Ahmed", "Omar", "Yousaf", "Zainab"};
-    int ages[maxPatients]={18,19,20,21,22,23,24,25,26,27};
-    string diseases[maxPatients]={"Flu", "Cold", "Fever", "Headache", "Stomachache", "Cough", "Body Pain", "Dizziness", "Nausea", "Fatigue"};
+    int ids[maxPatients];
+    string names[maxPatients];
+    int ages[maxPatients];
+    string diseases[maxPatients];
 
-    //for the history of 5 patients
     // hist size and p count declared globally so that we can use them in other functions as well
-    int histIds[histSize]={1,2,3,4,5};
-    string histNames[histSize]={"Ramzan", "Husnain", "Muneeb", "Junaid", "Sufyan"};
-    int histAges[histSize]={18,19,20,21,22};
-    string histDiseases[histSize]={"Flu", "Cold", "Fever", "Headache", "Stomachache"};
+    int histIds[histSize];
+    string histNames[histSize];
+    int histAges[histSize];
+    string histDiseases[histSize];
+    for(int i=0; i<histSize;i++){
+        histNames[i] = ""; //  imp because when we show history we will check if the name is empty or not, if it is empty then we will not show that record
+        histDiseases[i] = "";
+    }
+    //We want data ready before the menu even shows so when admin clicks "show all patients", data is already there
+        load_from_file(names, ids, ages, diseases, histIds, histNames, histAges, histDiseases);
+    
 
     while(true){
         cout<<endl;
@@ -297,7 +367,8 @@ int main(){
                 cout << "4 Delete patient " << endl;
                 cout << "5 Add new patient " << endl;
                 cout << "6 View patient history " << endl;
-                cout << "7 Logout " << endl;
+                cout << "7 Save data to file " << endl;
+                cout << "8 Logout " << endl;
 
                 string adminOption;
                 cout <<"Please select option : ";
@@ -346,11 +417,18 @@ int main(){
                      getch();
                 }
                 else if(adminOption == "7"){
-                    // code for logout
+                      save_to_file(names, ids, ages, diseases,
+                                 histIds, histNames, histAges, histDiseases);
+                    cout << "Press any key to continue..." << endl;
+                    getch();
+                              
+        }
+        else if(adminOption == "8"){
+                  // code for logout
                     logout();
                     getch();
-                break; // this will break the patient menu and return to main menu            
-        }
+                break; // this will break the patient menu and return to main menu  
+                }
     } //close while true before admin options
 
     //  added break to exit the login for-loop after successful login
